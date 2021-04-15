@@ -1,0 +1,52 @@
+def delete_part(a, b): #finds elements in list b that are not in a
+ r=[]
+ for nb in b:
+  i=0
+  for na in a:
+   if nb!=na:
+    i=i+1
+  if i==len(a):
+   r.append(nb)
+ return r
+
+import time
+import os
+file = open("access.log", "r")
+ldom=[] #all latest 10 seconds domains
+ddom=[] #all different domains for all current time working this program
+flag_ddom=0
+newsize=0
+start_time = time.time()
+
+while True:
+ if not os.path.exists("access.log"):
+   print('File was deleted, wait...')
+   time.sleep(10)
+ else:
+   oldsize=newsize
+   newsize=os.path.getsize("access.log")
+   if newsize>=oldsize:
+     line = file.readline()
+     if not line:
+       if (round(time.time() - start_time))%3600==0: #every hour
+         if flag_ddom==0: #for convenience
+           flag_ddom=1
+         else:
+           print('The list of all different domains was destroyed')
+           ddom=[]
+       if ldom==[]:
+         print('No new lines\n')
+       else:
+         print('All domains from the last added lines:',ldom)
+         r=delete_part(ddom,list(set(ldom)))
+         print('All new domains from the last added lines:',r)
+         ddom=ddom+r
+         print('All different domains for all time:',ddom,)
+         print('\n')
+         ldom=[]
+       time.sleep(10)
+     else:
+       ldom.append(line.split()[0])
+   else:
+     file.close
+     file = open("access.log", "r")
